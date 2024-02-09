@@ -1,9 +1,23 @@
+const faker = require('faker');
 const endpoints = require ('../integration/endpoints/endpoints.js');
 const payloads = require ('../integration/payloads/payloads.js');
 const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwLm1vcmluZWwiLCJpc3MiOiJnb2F3YWtlLXBvcnRhbCIsImV4cCI6MTcwMzIwMjI2MDQ5OCwidXNlciI6eyJpZCI6MzE1MSwiZnVsbE5hbWUiOiJQZWRybyBNb3JpbmVsIChDZW50cmFsKSJ9fQ.PSYu3GoAjCz2_UBVISH9tjPTl18e03VQi6QfO4mHqT4'
 
 let customerId = null
+let customerName = null
+let customerCnpj = null
+let customerAddress = null
+let customerIntegration = null
 let customerChildId = null
+let customerChildName = null
+let equipmentId = null
+let vehicleId = null
+let vehicleName = null
+let vehicleIntegration = null
+let vehicleIdentification = null
+let driverId = null
+let driverIdentification = null
+let driverIntegration = null
 
 
 describe('CRUD GoAwake', () => {
@@ -19,6 +33,10 @@ describe('CRUD GoAwake', () => {
       }).then((response) => {
         expect(response.status).to.eq(201);
         customerId = response.body.id
+        customerName = response.body.name
+        customerCnpj = response.body.cnpj
+        customerAddress = response.body.address
+        customerIntegration = response.body.integration
       })
     })
 
@@ -37,6 +55,7 @@ describe('CRUD GoAwake', () => {
       }).then((response) => {
         expect(response.status).to.eq(201);
         customerChildId = response.body.id
+        customerChildName = response.body.name
       })
     })
 
@@ -74,7 +93,7 @@ describe('CRUD GoAwake', () => {
       })
     })
 
-    it('Read contact from customer', () => {
+    it('Read users from customer', () => {
       cy.request({
         method: 'GET',
         url: endpoints.url.baseUrl + endpoints.read.users+customerId,
@@ -83,6 +102,7 @@ describe('CRUD GoAwake', () => {
         }
         }).then ((response) => {
           expect(response.status).to.eq(200);
+          cy.log(JSON.stringify(response.body))
       })
     })
 
@@ -113,6 +133,7 @@ describe('CRUD GoAwake', () => {
         body: payloads.createEquipment
       }).then ((response) => {
         expect(response.status).to.eq(201);
+        equipmentId = response.body.id
       })
     })
 
@@ -135,7 +156,7 @@ describe('CRUD GoAwake', () => {
 
     it('Create vehicle', () => {
       const createVehicleWithId = {
-        ...payloads.createVehicle,
+        ...payloads.createVehicle[0],
         customerChildId: customerChildId
       }
       cy.request({
@@ -147,7 +168,12 @@ describe('CRUD GoAwake', () => {
         body: [createVehicleWithId]
       }).then ((response) => {
         expect(response.status).to.eq(201);
-        cy.log(response.body)
+        vehicleId = response.body[0].id
+        vehicleName = response.body[0].name
+        vehicleIdentification = response.body[0].identification
+        vehicleIntegration = response.body[0].integration
+        cy.log(JSON.stringify(createVehicleWithId))
+        cy.log(JSON.stringify(response.body))
       })
     })
 
@@ -165,6 +191,10 @@ describe('CRUD GoAwake', () => {
         body: [createDriverWithId]
       }).then ((response) => {
         expect(response.status).to.eq(201);
+        driverId = response.body[0].id
+        driverIdentification = response.body[0].identification
+        driverIntegration = response.body[0].integration
+        cy.log(JSON.stringify(response.body))
       })
     })
 
@@ -198,7 +228,7 @@ describe('CRUD GoAwake', () => {
       })
     })
 
-    it('Read alerts' , () => {
+    it('Get alerts' , () => {
       cy.request({
         method: 'POST',
         url: endpoints.url.baseUrl + endpoints.read.customers,
@@ -210,4 +240,106 @@ describe('CRUD GoAwake', () => {
         expect(response.status).to.eq(200);
       })
     })
+
+    it('Update Edit Driver', () => {
+      const editDriver = {
+        ...payloads.createDriver,
+        id: driverId,
+        name: faker.name.firstName(),
+        customerId: customerId,
+        customerChildId: customerChildId,
+        integration: driverIntegration,
+        identification: driverIdentification,
+        customerChildName: customerChildName,
+        active: true,
+        hasFaceRecog: false
+      }
+      cy.request({
+        method: 'PUT',
+        url: endpoints.url.baseUrl + endpoints.update.updateDriver + driverId,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: editDriver
+      }).then ((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body.name).to.eq(editDriver.name)
+        cy.log(JSON.stringify(response.body))
+      })
+    })
+
+    it('Update joinImeiOnAsset', () => {
+      const joinImeiOnAsset = {
+        ...payloads.joinImeiOnAsset,
+        assetId: vehicleId
+      }
+      cy.request({
+        method: 'PUT',
+        url: endpoints.url.baseUrl + '//v2/equipment/' + equipmentId +'?acao=instalacao',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: joinImeiOnAsset
+      }).then ((response) => {
+        expect(response.status).to.eq(201);
+      })
+    })
+
+    it('Update desinstallImei', () => {
+      cy.request({
+        method: 'PUT',
+        url: endpoints.url.baseUrl + '//v2/equipment/' + equipmentId +'?acao=desinstalacao',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: payloads.desinstallImei
+      }).then ((response) => {
+        expect(response.status).to.eq(201);
+      })
+    })
+
+    it('Update inativeVehicle', () => {
+      const inativeVehicle = {
+        ...payloads.inativeVehicle,
+        id : vehicleId,
+        name: vehicleName,
+        customerId : customerId,
+        identification: vehicleIdentification,
+        customerChildName: customerChildName,
+        integration: vehicleIntegration
+      }
+      cy.request({
+        method: 'PUT',
+        url: endpoints.url.baseUrl + '//v2/vehicle/' + vehicleId,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: inativeVehicle
+      }).then ((response) => {
+        expect(response.status).to.eq(200);
+      })
+    })
+
+    it('Update inativeCustomerProfile', () => {
+      const inativeCustomerProfile = {
+        ...payloads.inativeCustomerProfile,
+        id : customerId,
+        name: customerName,
+        cnpj: customerCnpj,
+        address: customerAddress,
+        integration: customerIntegration
+      }
+      cy.request({
+        method: 'PUT',
+        url: endpoints.url.baseUrl + '//v2/customersProfile/' + customerId,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: inativeCustomerProfile
+      }).then ((response) => {
+        expect(response.status).to.eq(200);
+      })
+    })
+
+
 });

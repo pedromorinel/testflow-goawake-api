@@ -1,5 +1,5 @@
 import { generateRandomNumber } from '../resources/generateRandomNumber';
-import { generateRandomLicensePlate } from '../resources/generateRandomLicensePlate';
+import { generateRandomLicensePlate } from '../resources/generateRandomLicensePlate.js';
 const faker = require('faker');
 
 const realDate = new Date();
@@ -164,6 +164,49 @@ const payloads = {
         ],
         "date1": realDate,
         "date2": tenHoursBefore
+    },
+    joinImeiOnAsset: {
+        "assetId": "",
+        "tested": false
+    },
+    desinstallImei: {
+        "comments": "Desinstalado"
+    },
+    inativeVehicle: {
+        "id": "assetId",
+        "name": "assetName",
+        "customerId": "customerId",
+        "identification": "assetIdentification",
+        "integration": "integration",
+        "customerChildName": "customerChildName",
+        "active": false,
+        "hasFaceRecog": false
+    },
+    inativeCustomerProfile: {
+        "id": "{{id_customer}}",
+        "name": "{{name_customer}}",
+        "cnpj": "{{cnpj_customer}}",
+        "address": "{{address_customer}}",
+        "status": 2,
+        "integration": "{{integration_customer}}",
+        "hasFaceRecog": false,
+        "dealerName": "GoAwake",
+        "configurations": {
+            "hasMonitoringCenter": false,
+            "changePasswordRule": 365
+        }
+    },
+    updateDriver: {
+        "id": "",
+        "name": "",
+        "customerId": "",
+        "customerChildId": 145,
+        "identification": "24234324324",
+        "integration": "FOCUS_DRIVERS_000015669",
+        "status": 1,
+        "customerChildName": "Testes Rafael TESTE",
+        "active": true,
+        "hasFaceRecog": false
     }
 }
 
