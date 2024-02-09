@@ -13,6 +13,8 @@ export function generateRandomLicensePlate() {
         const randomIndex = Math.floor(Math.random() * numbers.length);
         plate += numbers[randomIndex];
     }
-    
     return plate;
+    
 }
+
+generateRandomLicensePlate();

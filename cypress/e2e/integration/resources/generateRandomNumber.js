@@ -6,3 +6,5 @@ export function generateRandomNumber() {
     }
     return randomNumber;
 }
+
+generateRandomNumber();
