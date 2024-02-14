@@ -162,8 +162,8 @@ const payloads = {
             22,
             23
         ],
-        "date1": realDate,
-        "date2": tenHoursBefore
+        "date1": tenHoursBefore,
+        "date2": realDate
     },
     joinImeiOnAsset: {
         "assetId": "",

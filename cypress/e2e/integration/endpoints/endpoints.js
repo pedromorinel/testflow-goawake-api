@@ -19,8 +19,8 @@ const endpoints = {
     update: {
         joinImeiOnAsset: '//v2/equipment/{{id_equipment}}?acao=instalacao',
         desinstallImei: '//v2/equipment/{{id_equipment}}?acao=desinstalacao',
-        inativeVehicle: '//v2/vehicle/{{id_vehicle}}',
-        inativeCustomerProfile: '//v2/customersProfile/{{id_customer}}',
+        inativeVehicle: '//v2/vehicle/', // add assetId
+        inativeCustomerProfile: '//v2/customersProfile/', // add customerProfileID
         updateDriver: '//v2/driver/' // add assetId
     },
     url: {

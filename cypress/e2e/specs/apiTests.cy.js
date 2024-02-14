@@ -2,154 +2,120 @@ const faker = require('faker');
 const endpoints = require ('../integration/endpoints/endpoints.js');
 const payloads = require ('../integration/payloads/payloads.js');
 const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwLm1vcmluZWwiLCJpc3MiOiJnb2F3YWtlLXBvcnRhbCIsImV4cCI6MTcwMzIwMjI2MDQ5OCwidXNlciI6eyJpZCI6MzE1MSwiZnVsbE5hbWUiOiJQZWRybyBNb3JpbmVsIChDZW50cmFsKSJ9fQ.PSYu3GoAjCz2_UBVISH9tjPTl18e03VQi6QfO4mHqT4'
+const authHeader = { 'Authorization': `Bearer ${token}` };
 
-let customerId = null
-let customerName = null
-let customerCnpj = null
-let customerAddress = null
-let customerIntegration = null
-let customerChildId = null
-let customerChildName = null
-let equipmentId = null
-let vehicleId = null
-let vehicleName = null
-let vehicleIntegration = null
-let vehicleIdentification = null
-let driverId = null
-let driverIdentification = null
-let driverIntegration = null
+const variables = {
+  customerId: null,
+  customerName: null,
+  customerCnpj: null,
+  customerAddress: null,
+  customerIntegration: null,
+  customerChildId: null,
+  customerChildName: null,
+  equipmentId: null,
+  vehicleId: null,
+  vehicleName: null,
+  vehicleIntegration: null,
+  vehicleIdentification: null,
+  driverId: null,
+  driverIdentification: null,
+  driverIntegration: null,
+  installEquipmentURL: null,
+  desintallEquipmentURL: null,
+  inativeVehicleURL: null,
+  inativeCustomerProfileURL: null
+}
 
+const createRequest = (method, url, body) => {
+  return cy.request({
+    method,
+    url,
+    headers: authHeader,
+    body
+  });
+};
 
 describe('CRUD GoAwake', () => {
 
     it('Create customer profile', () => {
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.customerProfile,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: payloads.createCustomerProfile
-      }).then((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.customerProfile, payloads.createCustomerProfile).then((response) => {
         expect(response.status).to.eq(201);
-        customerId = response.body.id
-        customerName = response.body.name
-        customerCnpj = response.body.cnpj
-        customerAddress = response.body.address
-        customerIntegration = response.body.integration
-      })
+        variables.customerId = response.body.id
+        variables.customerName = response.body.name
+        variables.customerCnpj = response.body.cnpj
+        variables.customerAddress = response.body.address
+        variables.customerIntegration = response.body.integration
+      }) 
     })
+
 
     it('Create customer', () => {
       const createCustomerWithId = {
         ...payloads.createCustomer, 
-        customerProfileId: customerId
+        customerProfileId: variables.customerId
       }
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.customer,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: createCustomerWithId
-      }).then((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.customer, createCustomerWithId).then((response) => {
         expect(response.status).to.eq(201);
-        customerChildId = response.body.id
-        customerChildName = response.body.name
+        variables.customerChildId = response.body.id
+        variables.customerChildName = response.body.name
+        variables.customerIntegration = response.body.integration
+        variables.customerCnpj = response.body.cnpj
+        variables.customerAddress = response.body.address
+        variables.customerName = response.body.name
+        variables.customerId = response.body.customerProfileId
       })
     })
 
     it('Create user', () => {
       const createUserWithId = {
         ...payloads.createUser,
-        customerChild: customerChildId,
-        customer: customerId
+        customerChild: variables.customerChildId,
+        customer: variables.customerId
       }
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.user,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: createUserWithId
-      }).then((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.user, createUserWithId).then((response) => {
         expect(response.status).to.eq(201);
       })
     })
 
     it('Create contact', () => {
-
       const createContactWithId = {
         ...payloads.createContact,
-        customerProfileId: customerId
+        customerProfileId: variables.customerId
       }
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.contact,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: [createContactWithId]
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.contact, [createContactWithId]).then((response) => {
+        expect(response.status).to.eq(201); 
       })
     })
 
     it('Read users from customer', () => {
-      cy.request({
-        method: 'GET',
-        url: endpoints.url.baseUrl + endpoints.read.users+customerId,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-        }).then ((response) => {
-          expect(response.status).to.eq(200);
-          cy.log(JSON.stringify(response.body))
+      createRequest('GET', endpoints.url.baseUrl + endpoints.read.users + variables.customerId).then((response) => {
+        expect(response.status).to.eq(200);
       })
     })
 
     it('Create risk rating', () => {
       const createRiskRatingWithId = {
         ...payloads.createRiskRating,
-        customers_child_id: [customerChildId]
+        customers_child_id: [variables.customerChildId]
       }
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.riskRating,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: createRiskRatingWithId
-      }).then((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.riskRating, createRiskRatingWithId).then((response) => {
         expect(response.status).to.eq(201);
       })
     })
 
     it('Create equipment', () => {
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.equipment,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: payloads.createEquipment
-      }).then ((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.equipment, payloads.createEquipment).then((response) => {
         expect(response.status).to.eq(201);
-        equipmentId = response.body.id
+        variables.equipmentId = response.body.id
       })
     })
 
     it('Create treatment', () => {
       const createTreatmentWithId = {
         ...payloads.createTreatment,
-        customer_id: customerId
+        customer_id: variables.customerId
       }
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.treatment,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: createTreatmentWithId
-      }).then ((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.treatment, createTreatmentWithId).then((response) => {
         expect(response.status).to.eq(200);
       })
     })
@@ -157,56 +123,32 @@ describe('CRUD GoAwake', () => {
     it('Create vehicle', () => {
       const createVehicleWithId = {
         ...payloads.createVehicle[0],
-        customerChildId: customerChildId
+        customerChildId: variables.customerChildId
       }
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.vehicle,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: [createVehicleWithId]
-      }).then ((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.vehicle, [createVehicleWithId]).then((response) => {
         expect(response.status).to.eq(201);
-        vehicleId = response.body[0].id
-        vehicleName = response.body[0].name
-        vehicleIdentification = response.body[0].identification
-        vehicleIntegration = response.body[0].integration
-        cy.log(JSON.stringify(createVehicleWithId))
-        cy.log(JSON.stringify(response.body))
+        variables.vehicleId = response.body[0].id
+        variables.vehicleName = response.body[0].name
+        variables.vehicleIdentification = response.body[0].identification
+        variables.vehicleIntegration = response.body[0].integration
       })
     })
 
     it('Create driver', () => {
       const createDriverWithId = {
         ...payloads.createDriver[0],
-        customerChildId: customerChildId
+        customerChildId: variables.customerChildId
       }
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.driver,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: [createDriverWithId]
-      }).then ((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.driver, [createDriverWithId]).then((response) => {
         expect(response.status).to.eq(201);
-        driverId = response.body[0].id
-        driverIdentification = response.body[0].identification
-        driverIntegration = response.body[0].integration
-        cy.log(JSON.stringify(response.body))
+        variables.driverId = response.body[0].id
+        variables.driverIntegration = response.body[0].integration
+        cy.log(response.body)
       })
     })
 
     it('Send email', () => {
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.email,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: payloads.sendEmail
-      }).then ((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.email, payloads.sendEmail).then((response) => {
         expect(response.status).to.eq(200);
       })
     })
@@ -214,132 +156,84 @@ describe('CRUD GoAwake', () => {
     it('Create badge', () => {
       const createBadgeWithId = {
         ...payloads.createBadge,
-        customerId: customerId
+        customerId: variables.customerId
       }
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.create.badge,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: createBadgeWithId
-      }).then ((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.badge, createBadgeWithId).then((response) => {
         expect(response.status).to.eq(201);
       })
     })
 
     it('Get alerts' , () => {
-      cy.request({
-        method: 'POST',
-        url: endpoints.url.baseUrl + endpoints.read.customers,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: payloads.customers
-      }).then ((response) => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.read.customers, payloads.customers).then((response) => {
         expect(response.status).to.eq(200);
       })
     })
 
-    it('Update Edit Driver', () => {
+    it('Update edit driver', () => {
       const editDriver = {
         ...payloads.createDriver,
-        id: driverId,
+        id: variables.driverId,
         name: faker.name.firstName(),
-        customerId: customerId,
-        customerChildId: customerChildId,
-        integration: driverIntegration,
-        identification: driverIdentification,
-        customerChildName: customerChildName,
+        customerId: variables.customerId,
+        customerChildId: variables.customerChildId,
+        integration: variables.driverIntegration,
+        identification: variables.driverIdentification,
+        customerChildName: variables.customerChildName,
         active: true,
         hasFaceRecog: false
       }
-      cy.request({
-        method: 'PUT',
-        url: endpoints.url.baseUrl + endpoints.update.updateDriver + driverId,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: editDriver
-      }).then ((response) => {
+      createRequest('PUT', endpoints.url.baseUrl + endpoints.update.updateDriver + variables.driverId, editDriver).then((response) => {
         expect(response.status).to.eq(200);
-        expect(response.body.name).to.eq(editDriver.name)
-        cy.log(JSON.stringify(response.body))
+        expect(response.body.name).to.eq(editDriver.name);
       })
     })
 
-    it('Update joinImeiOnAsset', () => {
+    it('Update install imei', () => {
+      variables.installEquipmentURL = endpoints.url.baseUrl + '//v2/equipment/'+ variables.equipmentId + '?acao=instalacao'
       const joinImeiOnAsset = {
         ...payloads.joinImeiOnAsset,
-        assetId: vehicleId
+        assetId: variables.vehicleId
       }
-      cy.request({
-        method: 'PUT',
-        url: endpoints.url.baseUrl + '//v2/equipment/' + equipmentId +'?acao=instalacao',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: joinImeiOnAsset
-      }).then ((response) => {
+      createRequest('PUT', variables.installEquipmentURL, joinImeiOnAsset).then ((response) => {
         expect(response.status).to.eq(201);
       })
     })
 
-    it('Update desinstallImei', () => {
-      cy.request({
-        method: 'PUT',
-        url: endpoints.url.baseUrl + '//v2/equipment/' + equipmentId +'?acao=desinstalacao',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: payloads.desinstallImei
-      }).then ((response) => {
+    it('Update desinstall Imei', () => {
+      variables.desintallEquipmentURL = endpoints.url.baseUrl + '//v2/equipment/'+ variables.equipmentId + '?acao=desinstalacao'
+      createRequest('PUT', variables.desintallEquipmentURL, payloads.desinstallImei).then ((response) => {
         expect(response.status).to.eq(201);
       })
     })
 
-    it('Update inativeVehicle', () => {
+    it('Update inative Vehicle', () => {
+      variables.inativeVehicleURL = endpoints.url.baseUrl + endpoints.update.inativeVehicle + variables.vehicleId
       const inativeVehicle = {
         ...payloads.inativeVehicle,
-        id : vehicleId,
-        name: vehicleName,
-        customerId : customerId,
-        identification: vehicleIdentification,
-        customerChildName: customerChildName,
-        integration: vehicleIntegration
+        id : variables.vehicleId,
+        name: variables.vehicleName,
+        customerId : variables.customerId,
+        identification: variables.vehicleIdentification,
+        customerChildName: variables.customerChildName,
+        integration: variables.vehicleIntegration
       }
-      cy.request({
-        method: 'PUT',
-        url: endpoints.url.baseUrl + '//v2/vehicle/' + vehicleId,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: inativeVehicle
-      }).then ((response) => {
+      createRequest('PUT', variables.inativeVehicleURL, inativeVehicle).then ((response) => {
         expect(response.status).to.eq(200);
       })
     })
 
-    it('Update inativeCustomerProfile', () => {
+    it('Update inative customer profile', () => {
+      variables.inativeCustomerProfileURL = endpoints.url.baseUrl + endpoints.update.inativeCustomerProfile + variables.customerId
       const inativeCustomerProfile = {
         ...payloads.inativeCustomerProfile,
-        id : customerId,
-        name: customerName,
-        cnpj: customerCnpj,
-        address: customerAddress,
-        integration: customerIntegration
+        id : variables.customerId,
+        name: variables.customerName,
+        cnpj: variables.customerCnpj,
+        address: variables.customerAddress,
+        integration: variables.customerIntegration
       }
-      cy.request({
-        method: 'PUT',
-        url: endpoints.url.baseUrl + '//v2/customersProfile/' + customerId,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: inativeCustomerProfile
-      }).then ((response) => {
+      createRequest('PUT', variables.inativeCustomerProfileURL, inativeCustomerProfile).then ((response) => {
         expect(response.status).to.eq(200);
       })
     })
-
-
-});
+  })
