@@ -14,7 +14,19 @@ const endpoints = {
     },
     read: {
         users: '/users/customer-profile/',
-        customers: '/alarmsByDateInterval/customers'
+        customers: '/alarmsByDateInterval/customers',
+        heartbeat: '/v2/heartbeat/last',
+        lastHeartbeatByCustomer: '/v2/heartbeat/last-heartbeat/customerChild',
+        auditedAlarms: '/alarmsAuditByDateInterval/customers',
+        customerProfile: '/v2/customersProfile/?active=true',
+        customersActive: '/customers/customerProfile/1?activeCustomers=false',
+        syncVehicles: '/assets/1/synchronizeVehiclesByCustomerChildId',
+        syncDrivers: '/assets/1/synchronizeDriversByCustomerChildId',
+        telemetryPositions: 'https://api-qa.goawakecloud.com.br/telemetry/positions/realtime',
+        vehiclesOrDrivers: '/assets/vehiclesOrDriversByManyCustomerChilds',
+        activeEquipments: '/v2/equipment/?isMaster=true&customersChild=121,124,130,145,343,4507,5397,5452,5956,6085,6086,6087,6088,6089,6090,7121,7269,7484',
+        lastAlarm: '/lastAlarm',
+        readRiskRating: '/risk-rating/customers-child/121'
     },
     update: {
         joinImeiOnAsset: '//v2/equipment/{{id_equipment}}?acao=instalacao',

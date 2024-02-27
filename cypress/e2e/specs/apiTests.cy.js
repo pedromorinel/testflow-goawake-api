@@ -87,12 +87,6 @@ describe('CRUD GoAwake', () => {
       })
     })
 
-    it('Read users from customer', () => {
-      createRequest('GET', endpoints.url.baseUrl + endpoints.read.users + variables.customerId).then((response) => {
-        expect(response.status).to.eq(200);
-      })
-    })
-
     it('Create risk rating', () => {
       const createRiskRatingWithId = {
         ...payloads.createRiskRating,
@@ -147,7 +141,7 @@ describe('CRUD GoAwake', () => {
       })
     })
 
-    it('Send email', () => {
+    it('Create email', () => {
       createRequest('POST', endpoints.url.baseUrl + endpoints.create.email, payloads.sendEmail).then((response) => {
         expect(response.status).to.eq(200);
       })
@@ -160,12 +154,6 @@ describe('CRUD GoAwake', () => {
       }
       createRequest('POST', endpoints.url.baseUrl + endpoints.create.badge, createBadgeWithId).then((response) => {
         expect(response.status).to.eq(201);
-      })
-    })
-
-    it('Get alerts' , () => {
-      createRequest('POST', endpoints.url.baseUrl + endpoints.read.customers, payloads.customers).then((response) => {
-        expect(response.status).to.eq(200);
       })
     })
 
@@ -236,4 +224,108 @@ describe('CRUD GoAwake', () => {
         expect(response.status).to.eq(200);
       })
     })
-  })
+
+    it('Read alerts' , () => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.read.customers, payloads.customers).then((response) => {
+        expect(response.status).to.eq(200);
+      })
+    })
+
+    it('Read users from customer', () => {
+      createRequest('GET', endpoints.url.baseUrl + endpoints.read.users + variables.customerId).then((response) => {
+        expect(response.status).to.eq(200);
+      })
+    })
+
+    it('Read last heartbeats', () => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.read.heartbeat, payloads.readHeartbeats).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body[0]).to.have.property('vehicle_id');
+      })
+    })
+
+    it('Read audited alarms', () => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.read.auditedAlarms, payloads.customers).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body).to.be.an('array').that.is.not.empty;
+        expect(response.body[0]).to.have.property('equipmentTypeId');
+      })
+    })
+
+    it('Read customer profile', () => {
+      createRequest('GET', endpoints.url.baseUrl + endpoints.read.customerProfile).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(JSON.parse(response.body)).to.be.an('array')
+      })
+    })
+
+    it('Read active customers', () => {
+      createRequest('GET', endpoints.url.baseUrl + endpoints.read.customersActive).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(JSON.parse(response.body)).to.be.an('array').that.is.not.empty;
+      })
+    })
+
+    it('Read telemetry positions', () => {
+      createRequest('POST', endpoints.read.telemetryPositions, payloads.telemetryPositions).then((response) => {
+        expect(response.status).to.eq(200);
+      })
+    })
+
+    it('Read vehicles' , () => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.read.vehiclesOrDrivers, payloads.readVehicles).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body).to.be.an('array').that.is.not.empty;
+      })
+    })
+
+    it('Read drivers' , () => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.read.vehiclesOrDrivers, payloads.readDrivers).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body).to.be.an('array').that.is.not.empty;
+      })
+    })
+
+    it('Read active equipments', () => {
+      createRequest('GET', endpoints.url.baseUrl + endpoints.read.activeEquipments).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(JSON.parse(response.body)).to.be.an('array').that.is.not.empty;
+      })
+    })
+
+    it('Read last alarm', () => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.read.lastAlarm, payloads.readLastAlarm).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body[0]).to.have.property('inserted_on');
+      })
+    })
+
+    it('Read last heartbeat by customer', () => {
+      createRequest('POST', endpoints.url.baseUrl + endpoints.read.lastHeartbeatByCustomer, payloads.readLastHeartbeatByCustomer).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body[0]).to.have.property('vehicle_id');
+      })
+    })
+
+    it('Read risk rating', () => {
+      createRequest('GET', endpoints.url.baseUrl + endpoints.read.readRiskRating).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body).to.be.an('array').that.is.not.empty;
+      })
+    })
+
+    it('Sync vehicles', () => {
+      createRequest('GET', endpoints.url.baseUrl + endpoints.read.syncVehicles).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(JSON.parse(response.body)).to.be.an('array')
+      })
+    })
+
+    it('Sync drivers', () => {
+      createRequest('GET', endpoints.url.baseUrl + endpoints.read.syncDrivers).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(JSON.parse(response.body)).to.be.an('array')
+      })
+    })
+
+})
