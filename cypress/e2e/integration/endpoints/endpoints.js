@@ -10,7 +10,8 @@ const endpoints = {
         vehicle: '/v2/vehicle/',
         driver: '//v2/driver/',
         email: '/audit/send-audit-alarm-notification-by-email/25729653',
-        badge: '///v2/badge'
+        badge: '///v2/badge',
+        treatAlert: '//v2/audit/'
     },
     read: {
         users: '/users/customer-profile/',

@@ -23,7 +23,8 @@ const variables = {
   installEquipmentURL: null,
   desintallEquipmentURL: null,
   inativeVehicleURL: null,
-  inativeCustomerProfileURL: null
+  inativeCustomerProfileURL: null,
+  alertId: null
 }
 
 const createRequest = (method, url, body) => {
@@ -35,7 +36,9 @@ const createRequest = (method, url, body) => {
   });
 };
 
-describe('CRUD GoAwake', () => {
+describe('GoAwake API', () => {
+
+    
 
     it('Create customer profile', () => {
       createRequest('POST', endpoints.url.baseUrl + endpoints.create.customerProfile, payloads.createCustomerProfile).then((response) => {
@@ -47,7 +50,6 @@ describe('CRUD GoAwake', () => {
         variables.customerIntegration = response.body.integration
       }) 
     })
-
 
     it('Create customer', () => {
       const createCustomerWithId = {
@@ -137,7 +139,6 @@ describe('CRUD GoAwake', () => {
         expect(response.status).to.eq(201);
         variables.driverId = response.body[0].id
         variables.driverIntegration = response.body[0].integration
-        cy.log(response.body)
       })
     })
 
@@ -228,8 +229,23 @@ describe('CRUD GoAwake', () => {
     it('Read alerts' , () => {
       createRequest('POST', endpoints.url.baseUrl + endpoints.read.customers, payloads.customers).then((response) => {
         expect(response.status).to.eq(200);
+        variables.alertId = response.body[0].id
       })
     })
+
+    it('Create treat alert', () => {
+      const createTreatAlertWithId = {
+        ...payloads.treatAlert,
+        alarms: payloads.treatAlert.alarms.map(alarm => ({
+          ...alarm,
+          id: variables.alertId
+        })) 
+      } 
+      createRequest('POST', endpoints.url.baseUrl + endpoints.create.treatAlert, createTreatAlertWithId).then((response) => {
+        expect(response.status).to.eq(201);
+      })
+    })
+
 
     it('Read users from customer', () => {
       createRequest('GET', endpoints.url.baseUrl + endpoints.read.users + variables.customerId).then((response) => {

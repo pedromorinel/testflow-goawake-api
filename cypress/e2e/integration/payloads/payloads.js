@@ -3,9 +3,10 @@ import { generateRandomLicensePlate } from '../resources/generateRandomLicensePl
 const faker = require('faker');
 
 const realDate = new Date();
+realDate.setHours(realDate.getHours() - 3);
 
 const tenHoursBefore = new Date();
-tenHoursBefore.setHours(tenHoursBefore.getHours() - 10);
+tenHoursBefore.setHours(tenHoursBefore.getHours() - 13);
 
 
 
@@ -352,6 +353,28 @@ const payloads = {
             7484
         ]
     },
+    
+    treatAlert: {
+    "comments": "OK",
+    "treatment": 932,
+    "alarms": [
+        {
+            "groupAlarmsChild": [],
+            "selected": true,
+            "isSelected": false,
+            "id": "",
+            "hasFaceRecog": true,
+            "groupRisk": 1,
+            "datetime": realDate
+        }
+    ],
+    "auditStatus": 1,
+    "createDate": realDate,
+    "maskCOVID": null,
+    "noSeatbelt": false,
+    "groupRisk": 1
+}
+
     
 
 }
