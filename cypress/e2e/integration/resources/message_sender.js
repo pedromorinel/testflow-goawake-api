@@ -1,11 +1,7 @@
 const amqp = require('amqplib/callback_api');
-const QUEUE_NAME = 'alarm-response';
 function publishMessage(obj, QUEUE_NAME) {
   const payload = JSON.stringify(obj, null, 4);
   try {
-    console.log('Publishing message:', payload);
-    console.log('QUEUE_NAME:', QUEUE_NAME);
-
     const connection = {
       protocol: 'amqp',
       hostname: '10.1.2.25',

@@ -1,4 +1,5 @@
 const faker = require('faker');
+import { generateRandomLicensePlate } from './../integration/resources/generateRandomLicensePlate';
 const endpoints = require ('../integration/endpoints/endpoints.js');
 const payloads = require ('../integration/payloads/payloads.js');
 const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwLm1vcmluZWwiLCJpc3MiOiJnb2F3YWtlLXBvcnRhbCIsImV4cCI6MTcwMzIwMjI2MDQ5OCwidXNlciI6eyJpZCI6MzE1MSwiZnVsbE5hbWUiOiJQZWRybyBNb3JpbmVsIChDZW50cmFsKSJ9fQ.PSYu3GoAjCz2_UBVISH9tjPTl18e03VQi6QfO4mHqT4'
@@ -158,7 +159,7 @@ describe('GoAwake API', () => {
       })
     })
 
-    it('Update edit driver', () => {
+    it('Update driver', () => {
       const editDriver = {
         ...payloads.createDriver,
         id: variables.driverId,
@@ -246,8 +247,8 @@ describe('GoAwake API', () => {
       })
     })
 
-
     it('Read users from customer', () => {
+      //cy.exec('node ./cypress/e2e/integration/resources/postAlert.js')
       createRequest('GET', endpoints.url.baseUrl + endpoints.read.users + variables.customerId).then((response) => {
         expect(response.status).to.eq(200);
       })
