@@ -1,5 +1,5 @@
-const faker = require('faker');
 import { generateRandomLicensePlate } from './../integration/resources/generateRandomLicensePlate';
+const { faker } = require('@faker-js/faker');
 const endpoints = require ('../integration/endpoints/endpoints.js');
 const payloads = require ('../integration/payloads/payloads.js');
 const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwLm1vcmluZWwiLCJpc3MiOiJnb2F3YWtlLXBvcnRhbCIsImV4cCI6MTcwMzIwMjI2MDQ5OCwidXNlciI6eyJpZCI6MzE1MSwiZnVsbE5hbWUiOiJQZWRybyBNb3JpbmVsIChDZW50cmFsKSJ9fQ.PSYu3GoAjCz2_UBVISH9tjPTl18e03VQi6QfO4mHqT4'
@@ -38,8 +38,6 @@ const createRequest = (method, url, body) => {
 };
 
 describe('GoAwake API', () => {
-
-    
 
     it('Create customer profile', () => {
       createRequest('POST', endpoints.url.baseUrl + endpoints.create.customerProfile, payloads.createCustomerProfile).then((response) => {
@@ -163,7 +161,7 @@ describe('GoAwake API', () => {
       const editDriver = {
         ...payloads.createDriver,
         id: variables.driverId,
-        name: faker.name.firstName(),
+        name: faker.person.firstName(),
         customerId: variables.customerId,
         customerChildId: variables.customerChildId,
         integration: variables.driverIntegration,
@@ -228,6 +226,7 @@ describe('GoAwake API', () => {
     })
 
     it('Read alerts' , () => {
+      cy.exec('node ./cypress/e2e/integration/resources/postAlert.js')
       createRequest('POST', endpoints.url.baseUrl + endpoints.read.customers, payloads.customers).then((response) => {
         expect(response.status).to.eq(200);
         variables.alertId = response.body[0].id
@@ -248,7 +247,6 @@ describe('GoAwake API', () => {
     })
 
     it('Read users from customer', () => {
-      //cy.exec('node ./cypress/e2e/integration/resources/postAlert.js')
       createRequest('GET', endpoints.url.baseUrl + endpoints.read.users + variables.customerId).then((response) => {
         expect(response.status).to.eq(200);
       })

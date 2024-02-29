@@ -1,6 +1,6 @@
 import { generateRandomNumber } from '../resources/generateRandomNumber';
 import { generateRandomLicensePlate } from '../resources/generateRandomLicensePlate.js';
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 
 const realDate = new Date();
 realDate.setHours(realDate.getHours() - 3);
@@ -8,13 +8,11 @@ realDate.setHours(realDate.getHours() - 3);
 const tenHoursBefore = new Date();
 tenHoursBefore.setHours(tenHoursBefore.getHours() - 13);
 
-
-
 const payloads = {
     createCustomerProfile: {
-        "name": faker.address.country(),
-        "cnpj": faker.random.number(),
-        "address": faker.address.streetAddress(),
+        "name": faker.company.name(),
+        "cnpj": faker.number.binary(),
+        "address": faker.location.streetAddress(),
         "status": 1,
         "configurations": {
             "hasMonitoringCenter": false
@@ -22,15 +20,15 @@ const payloads = {
     },
     createCustomer: {
         "customerProfileId": "",
-        "identification": faker.lorem.words(),
-        "name": faker.name.lastName(),
+        "identification": faker.word.adverb(),
+        "name": faker.company.name(),
         "parentId": null,
         "status": 1,
         "focus": true 
     },
     createUser: {
         "login": faker.internet.userName(),
-        "name": faker.name.firstName(),
+        "name": faker.person.firstName(),
         "email": faker.internet.email(),
         "senha": "Abcd123@",
         "status": 1,
@@ -41,7 +39,7 @@ const payloads = {
         "phones": [
             generateRandomNumber(),
         ],
-        "name": faker.name.firstName(),
+        "name": faker.person.firstName(),
         "customerProfileId": "",
         "email": faker.internet.email(),
         "workscheduleStart": null,
@@ -81,13 +79,13 @@ const payloads = {
         "isValidPlate": true
     }],
     createDriver: [{
-        "name": faker.name.firstName(),
+        "name": faker.person.firstName(),
         "identification": generateRandomNumber(),
         "badgeId": "",
         "customerChildId": ""
     }],
     createBadge: {
-        "id": faker.random.number(),
+        "id": faker.number.int(),
         "description": faker.lorem.words(),
         "customerId": 184,
         "badgeTypeId": 1,
@@ -95,7 +93,7 @@ const payloads = {
     },
     sendEmail: {
         "to": [
-            "ariel.goulart@crearesistemas.com.br"
+            "gian.mattos@crearesistemas.com.br"
         ],
         "attachments": [
             {
@@ -353,28 +351,26 @@ const payloads = {
             7484
         ]
     },
-    
     treatAlert: {
-    "comments": "OK",
-    "treatment": 932,
-    "alarms": [
-        {
-            "groupAlarmsChild": [],
-            "selected": true,
-            "isSelected": false,
-            "id": "",
-            "hasFaceRecog": true,
-            "groupRisk": 1,
-            "datetime": realDate
-        }
-    ],
-    "auditStatus": 1,
-    "createDate": realDate,
-    "maskCOVID": null,
-    "noSeatbelt": false,
-    "groupRisk": 1
-}
-
+        "comments": "OK",
+        "treatment": 932,
+        "alarms": [
+            {
+                "groupAlarmsChild": [],
+                "selected": true,
+                "isSelected": false,
+                "id": "",
+                "hasFaceRecog": true,
+                "groupRisk": 1,
+                "datetime": realDate
+            }
+        ],
+        "auditStatus": 1,
+        "createDate": realDate,
+        "maskCOVID": null,
+        "noSeatbelt": false,
+        "groupRisk": 1
+    }
     
 
 }

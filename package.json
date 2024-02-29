@@ -1,0 +1,44 @@
+{
+  "name": "testflow-goawake-api",
+  "version": "1.0.0",
+  "description": "![TestFlow GoAwake Logo](https://i.ytimg.com/vi/vKxwHf_Svcw/maxresdefault.jpg)",
+  "main": "cypress.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@shelex/cypress-allure-plugin": "^2.40.1",
+    "cypress": "^13.6.6",
+    "cypress-cucumber-preprocessor": "^4.3.1",
+    "cypress-file-upload": "^5.0.0",
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "mocha": "^9.1.3",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^4.3.0",
+    "multiple-cucumber-html-reporter": "^3.6.2"
+  },
+  "cypress-cucumber-preprocessor": {
+    "cucumberJson": {
+      "generate": true,
+      "outputFolder": "cypress/reports/cucumber-json",
+      "filePrefix": "",
+      "fileSuffix": ".cucumber"
+    },
+    "nonGlobalStepDefinitions": true
+  },
+  "dependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^20.0.1",
+    "amqplib": "^0.10.3",
+    "date-fns": "^3.3.1",
+    "fs": "^0.0.1-security",
+    "luxon": "^3.4.4",
+    "nodemailer": "^6.9.10",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "pg": "^8.11.3",
+    "smtp-client": "^0.4.0"
+  }
+}
