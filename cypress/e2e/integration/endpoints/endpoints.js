@@ -9,9 +9,12 @@ const endpoints = {
         treatment: '/treatment',
         vehicle: '/v2/vehicle/',
         driver: '//v2/driver/',
-        email: '/audit/send-audit-alarm-notification-by-email/25729653',
+        email: '/audit/send-audit-alarm-notification-by-email/', // add auditId
         badge: '///v2/badge',
-        treatAlert: '//v2/audit/'
+        treatAlert: '//v2/audit/',
+        signature: '/v2/audit/driver-signature',
+        audit: '/v2/audit/workflow',
+        voiceMessage: '//v2/commands-voice/'
     },
     read: {
         users: '/users/customer-profile/',
@@ -35,6 +38,9 @@ const endpoints = {
         inativeVehicle: '//v2/vehicle/', // add assetId
         inativeCustomerProfile: '//v2/customersProfile/', // add customerProfileID
         updateDriver: '//v2/driver/' // add assetId
+    },
+    delete: {
+        signature: '//v2/audit/driver-signature/' // add signatureId
     },
     url: {
         baseUrl: 'https://api-qa.goawakecloud.com.br/api'
