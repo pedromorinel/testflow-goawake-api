@@ -314,14 +314,14 @@ describe('GoAwake API', () => {
     it('Read customer profile', () => {
         createRequest('GET', endpoints.url.baseUrl + endpoints.read.customerProfile).then((response) => {
             expect(response.status).to.eq(200);
-            expect(JSON.parse(response.body)).to.be.an('array')
+            expect(response.body).to.be.an('array')
         })
     })
 
     it('Read active customers', () => {
         createRequest('GET', endpoints.url.baseUrl + endpoints.read.customersActive).then((response) => {
             expect(response.status).to.eq(200);
-            expect(JSON.parse(response.body)).to.be.an('array').that.is.not.empty;
+            expect(response.body).to.be.an('array').that.is.not.empty;
         })
     })
 
@@ -348,7 +348,7 @@ describe('GoAwake API', () => {
     it('Read active equipments', () => {
         createRequest('GET', endpoints.url.baseUrl + endpoints.read.activeEquipments).then((response) => {
             expect(response.status).to.eq(200);
-            expect(JSON.parse(response.body)).to.be.an('array').that.is.not.empty;
+            expect(response.body).to.be.an('array').that.is.not.empty;
         })
     })
 
@@ -376,14 +376,14 @@ describe('GoAwake API', () => {
     it('Sync vehicles', () => {
         createRequest('GET', endpoints.url.baseUrl + endpoints.read.syncVehicles).then((response) => {
             expect(response.status).to.eq(200);
-            expect(JSON.parse(response.body)).to.be.an('array')
+            expect(response.body).to.be.an('array')
         })
     })
 
     it('Sync drivers', () => {
         createRequest('GET', endpoints.url.baseUrl + endpoints.read.syncDrivers).then((response) => {
             expect(response.status).to.eq(200);
-            expect(JSON.parse(response.body)).to.be.an('array')
+            expect(response.body).to.be.an('array')
         })
     })
 
